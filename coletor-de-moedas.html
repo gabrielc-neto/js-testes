@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    
+    <title>Página</title>
+    <meta charset="UTF-8" />
+    <meta nome="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+   <nav id="navbar">
+      <a href="" class="nav-brand">Jogo Corrida de joias</a>
+      <ul>
+        <li class="nav-item nav-stats">Pontuação <span id="mostrar-pontuacao"></span></li>
+      </ul>
+    </nav>
+
+    <div class="container" id="main">
+        <div>
+            <h2>Colecionar Moedas</h2>
+            <p class="collection-description">Cada moeda vale uma pontuação de 10</p>
+            <button id="colecionar-moeda" class="btn btn-default">Colete moedas</button>
+            <p id="moedas-colecionadas" class="collection-stat">0 moedas colecionadas</p>
+        </div>
+
+        <div>
+            <h2>Colecionar Joias</h2>
+            <p class="collection-description">Cada joia vale uma pontuação de 50</p>
+            <button id="colecionar-joia" class="btn btn-outline">Colete joias</button>
+            <p id="joias-colecionadas" class="collection-stat">0 joias colecionadas</p>
+        </div>
+    </div>
+  </body>
+<script>
+class Colecionavel {
+    constructor(nome, valor) {
+        this.nome = nome;
+        this.valor = valor;
+        this.contagem = 0;
+    }
+
+    obterMensagemColecionada() {
+        return `${this.contagem} ${this.nome}s colecionadas`;
+    }
+
+    colecionar() {
+        this.contagem++;
+    }
+
+    obterPontuacao() {
+        return this.contagem * this.valor;
+    }
+}
+
+class Moeda extends Colecionavel {
+    constructor() {
+        super("moeda", 10);
+    }
+}
+
+class Joia extends Colecionavel {
+    constructor() {
+        super("joia", 50);
+    }
+}
+
+class PontuacaoDoJogo {
+    constructor() {
+        this.colecionaveis = [];
+    }
+
+    adicionaColecionavel(colecionavel) {
+        this.colecionaveis.push(colecionavel);
+    }
+
+    obterPontuacaoTotal() {
+        return this.colecionaveis.reduce((total, atual) => {
+            return total + atual.obterPontuacao();
+        }, 0);
+    }
+}
+ 
+// ---------------------------
+// Uso das classes
+// Ler as próximas 9 linhas
+const moeda = new Moeda();
+const joia = new Joia();
+const pontuacaoDoJogo = new PontuacaoDoJogo();
+try {
+    pontuacaoDoJogo.adicionaColecionavel(moeda);
+    pontuacaoDoJogo.adicionaColecionavel(joia);
+} catch (error) {
+    console.error(error);
+}
+// ---------------------------
+
+const colecionarMoeda = document.querySelector("#colecionar-moeda");
+const colecionarJoia = document.querySelector("#colecionar-joia");
+const moedasColecionadas = document.querySelector("#moedas-colecionadas");
+const joiasColecionadas = document.querySelector("#joias-colecionadas");
+const mostrarPontuacao = document.querySelector("#mostrar-pontuacao");
+
+const render = () => {
+    try {
+        moedasColecionadas.textContent = moeda.obterMensagemColecionada();
+        joiasColecionadas.textContent = joia.obterMensagemColecionada();
+        mostrarPontuacao.textContent = pontuacaoDoJogo.obterPontuacaoTotal();
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+colecionarMoeda.addEventListener("click", () => {
+    moeda.colecionar();
+    render();
+});
+colecionarJoia.addEventListener("click", () => {
+    joia.colecionar();
+    render();
+});
+</script>
+</html>
